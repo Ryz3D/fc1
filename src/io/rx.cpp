@@ -1,4 +1,4 @@
-#include "rx.h"
+#include "io/rx.h"
 
 float RX::signals[RX_CHANNELS];
 

@@ -1,13 +1,13 @@
 #pragma once
 
 #include <Arduino.h>
-#include "sensors.h"
-#include "flightMode.h"
+#include "io/sensors.h"
+#include "flight/flightMode.h"
 
-#include "basicModes.h"
+#include "flight/basicModes.h"
 
 #if (AUTO_MODES == 1)
-#include "autoModes.h"
+#include "flight/autoModes.h"
 #define MODE_COUNT 7
 #else
 #define MODE_COUNT 4

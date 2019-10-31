@@ -26,7 +26,26 @@ D11 - Rudder
 #include "main.h"
 
 void setup() {
-  //Serial.begin(9600);
+  Serial.begin(9600);
+  Settings::init();
+
+  delay(1000);
+
+  for (uint16_t t = 0; t < 50; t++) {
+    if (Serial.available() > 0) {
+      BLINK_SHORT
+      BLINK_SHORT
+      BLINK_SHORT
+      Settings::programMode();
+      break;
+    }
+    delay(100);
+  }
+
+  delay(100);
+
+  Serial.flush();
+  Serial.end();
 
   Flight::init();
   RX::init();
@@ -40,14 +59,8 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(200);
 
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(50);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(200);
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(50);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(200);
+  BLINK_LONG
+  BLINK_SHORT
 }
 
 void loop() {

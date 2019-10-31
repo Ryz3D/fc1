@@ -1,4 +1,4 @@
-#include "mixer.h"
+#include "flight/mixer.h"
 
 float Mixer::mixer[4][4] = {
 #if (MIXER == 0) // nothin'

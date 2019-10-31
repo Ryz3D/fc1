@@ -1,4 +1,4 @@
-#include "pid.h"
+#include "flight/pid.h"
 
 void PID::update(float error) {
     sumError += error;

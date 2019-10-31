@@ -1,13 +1,13 @@
 #pragma once
 
 #include "settings.h"
-#include "flightMode.h"
-#include "flight.h"
-#include "rx.h"
-#include "pwm.h"
-#include "gyro.h"
-#include "pid.h"
-#include "mixer.h"
+#include "flight/flightMode.h"
+#include "flight/flight.h"
+#include "flight/pid.h"
+#include "flight/mixer.h"
+#include "io/rx.h"
+#include "io/pwm.h"
+#include "io/gyro.h"
 
 class FMAngle : public FlightMode {
     void init() override;
@@ -32,6 +32,12 @@ private:
     float sp_roll;
     float sp_pitch;
     float sp_yaw;
+
+    float rate_r;
+    float rate_p;
+    float rate_y;
+    
+    float pid_factor;
 };
 
 class FMTrainer : public FlightMode {

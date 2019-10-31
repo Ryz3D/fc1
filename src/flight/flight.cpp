@@ -1,4 +1,4 @@
-#include "flight.h"
+#include "flight/flight.h"
 
 // remember #define in flight.h
 FlightMode *Flight::modes[] = {

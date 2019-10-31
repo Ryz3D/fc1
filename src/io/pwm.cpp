@@ -1,4 +1,4 @@
-#include "pwm.h"
+#include "io/pwm.h"
 
 Servo PWM::pwm[4];
 

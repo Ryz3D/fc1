@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "flight.h"
+#include "flight/flight.h"
 
 #define MODE_ANGLE 0
 #define MODE_HORIZON 1

@@ -1,4 +1,4 @@
-#include "gyro.h"
+#include "io/gyro.h"
 
 uint8_t Gyro::address = 0x68;
 int Gyro::temperature;
