@@ -9,8 +9,8 @@ float Gyro::a_pitch, Gyro::a_roll;
 float Gyro::angle_p, Gyro::angle_r;
 
 bool Gyro::calibrated;
-int16_t Gyro::g_axis[4], Gyro::a_axis[4];
-double Gyro::g_cal[3];
+int16_t Gyro::g_axis[3], Gyro::a_axis[3];
+double Gyro::g_cal[3], Gyro::a_cal[3];
 
 void Gyro::write8(uint8_t addr, uint8_t value) {
     Wire.beginTransmission(address);
@@ -38,6 +38,7 @@ void Gyro::init() {
     write8(0x1B, 0x08); // 500dps full scale
     write8(0x1C, 0x10); // 8g full scale
     write8(0x1A, 0x03); // lpf 43hz
+    calibrated = 0;
 }
 
 void Gyro::calibrate() {
@@ -46,13 +47,14 @@ void Gyro::calibrate() {
         update();
         for (uint8_t j = 0; j < 3; j++) {
             g_cal[j] += g_axis[j];
+            a_cal[j] += a_axis[j];
         }
         delay(10);
     }
     for (uint8_t i = 0; i < 3; i++) {
         g_cal[i] /= 2000;
     }
-    calibrated = true;
+    calibrated = 1;
 }
 
 void Gyro::update() {
@@ -71,6 +73,7 @@ void Gyro::update() {
         if (calibrated) {
             for (uint8_t i = 0; i < 3; i++) {
                 g_axis[i] -= g_cal[i];
+                a_axis[i] -= a_cal[i];
             }
         }
 

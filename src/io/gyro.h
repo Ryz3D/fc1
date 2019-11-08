@@ -32,6 +32,6 @@ private:
     static int16_t read16();
 
     static bool calibrated;
-    static int16_t g_axis[4], a_axis[4];
-    static double g_cal[3];
+    static int16_t g_axis[3], a_axis[3];
+    static double g_cal[3], a_cal[3];
 };

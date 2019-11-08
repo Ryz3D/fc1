@@ -16,12 +16,35 @@ FlightMode *Flight::modes[] = {
 uint8_t Flight::currentMode = 0;
 
 void Flight::init() {
-    currentMode = 0;
-    for (uint8_t i = 0; i < MODE_COUNT; i++) {
-        modes[i]->init();
-    }
+    currentMode = MODE_DEFAULT;
+    modes[currentMode]->init();
 }
 
 void Flight::update() {
+#if (RX_SW_MODE != -1)
+    bool updated = 0;
+    if (RX::signals[RX_SW_MODE] < -0.33f) {
+        if (currentMode != 0) {
+            currentMode = 0;
+            updated = 1;
+        }
+    }
+    else if (RX::signals[RX_SW_MODE] < 0.33f) {
+        if (currentMode != 1) {
+            currentMode = 1;
+            updated = 1;
+        }
+    }
+    else {
+        if (currentMode != 2) {
+            currentMode = 2;
+            updated = 1;
+        }
+    }
+    if (updated) {
+        modes[currentMode]->init();
+        Info::blink_short();
+    }
+#endif
     modes[currentMode]->update();
 }

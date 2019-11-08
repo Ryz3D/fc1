@@ -27,15 +27,21 @@ D11 - Rudder
 
 void setup() {
   Serial.begin(9600);
+  Info::init();
   Settings::init();
 
   delay(1000);
 
+  Info::blink_long();
+  Info::blink_long();
+  Info::blink_long();
+
   for (uint16_t t = 0; t < 50; t++) {
-    if (Serial.available() > 0) {
-      BLINK_SHORT
-      BLINK_SHORT
-      BLINK_SHORT
+    if (Serial.available()) {
+      while (Serial.available()) Serial.read();
+      Info::blink_short();
+      Info::blink_short();
+      Info::blink_short();
       Settings::programMode();
       break;
     }
@@ -52,15 +58,13 @@ void setup() {
   PWM::init();
   Gyro::init();
 
-  Flight::currentMode = MODE_ACRO;
-
   digitalWrite(LED_BUILTIN, HIGH);
   Gyro::calibrate();
   digitalWrite(LED_BUILTIN, LOW);
   delay(200);
 
-  BLINK_LONG
-  BLINK_SHORT
+  Info::blink_long();
+  Info::blink_short();
 }
 
 void loop() {
