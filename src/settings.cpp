@@ -84,9 +84,21 @@ const float Settings::f_default[SETTING_COUNT] = {
 
 void Settings::init() {
     while (!eeprom_is_ready());
+#if (FORCE_DEFAULT == 1)
     for (uint8_t i = 0; i < SETTING_COUNT; i++) {
         eeprom_update_float(&f_arr[i], f_default[i]);
     }
+#endif
+}
+
+bool Settings::exists(const char *key) {
+    while (!eeprom_is_ready());
+    for (uint16_t i = 0; i < SETTING_COUNT; i++) {
+        if (strcmp(s_arr[i], key) == 0) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void Settings::set(const char *key, float value) {
@@ -109,27 +121,65 @@ float Settings::get(const char *key) {
 }
 
 void Settings::programMode() {
-    Serial.println(F("\\"));
+    Serial.print(F("\\\n"));
 
-    while (true) {
+    bool progActive = 1;
+    while (progActive) {
         if (Serial.available()) {
-            String key = Serial.readStringUntil('=');
-            if (key.startsWith("quit") == 0) {
-                break;
-            }
+            String key = "";
+            while (true) {
+                int c = Serial.read();
+                bool done = 0;
 
-            float value = Serial.parseFloat();
-            Serial.print("+");
-
-            for (uint16_t i = 0; i < SETTING_COUNT; i++) {
-                if (key.compareTo(s_arr[i]) == 0) {
-                    eeprom_update_float(&f_arr[i], value);
-                    Serial.print(F("+"));
+                switch (c) {
+                    case '<':
+                    {
+                        float f = get(key.c_str());
+                        if (exists(key.c_str())) {
+                            Serial.print(f, 7);
+                        }
+                        else {
+                            Serial.print("!");
+                        }
+                        Serial.print(F("\n"));
+                        done = 1;
+                        break;
+                    }
+                    case '>':
+                    {
+                        float value = Serial.parseFloat();
+                        if (exists(key.c_str())) {
+                            set(key.c_str(), value);
+                            Serial.print(F("+"));
+                        }
+                        else {
+                            Serial.print(F("!"));
+                        }
+                        Serial.print(F("\n"));
+                        done = 1;
+                        break;
+                    }
+                    case '!':
+                    {
+                        progActive = 0;
+                        done = 1;
+                        break;
+                    }
+                    default:
+                    {
+                        if (isAscii(c)) {
+                            key.concat((char)c);
+                        }
+                        break;
+                    }
+                }
+                
+                if (done) {
+                    break;
                 }
             }
-            Serial.print(F("\n"));
         }
     }
 
-    Serial.println(F("/"));
+    Serial.print(F("/\n"));
 }
